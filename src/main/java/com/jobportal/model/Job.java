@@ -1,5 +1,7 @@
 package com.jobportal.model;
 
+import com.jobportal.auth.models.User;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -25,6 +27,6 @@ public class Job {
     private String location;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "recruiter_id", nullable = false)
-    private Recruiter postedBy;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }

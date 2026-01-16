@@ -14,7 +14,6 @@ import com.jobportal.model.JobApplication;
 import com.jobportal.model.Recruiter;
 import com.jobportal.repository.JobApplicationRepository;
 import com.jobportal.repository.JobRepository;
-import com.jobportal.repository.RecruiterRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +24,7 @@ public class JobService {
 
     private final JobRepository jobRepo;
     private final JobApplicationRepository applicationRepo;
-    private final RecruiterRepository recruiterRepo;
-    private final UserRepository candidateRepo;
+    private final UserRepository userRepo;
 
     // --- Public Methods ---
 
@@ -52,19 +50,19 @@ public class JobService {
     // Requirement 8: Post a new job
     @Transactional
     public Job postJob(Job job, String recruiterEmail) {
-        Recruiter recruiter = recruiterRepo.findByEmail(recruiterEmail)
+        User recruiter = userRepo.findByEmail(recruiterEmail)
                 .orElseThrow(() -> new RuntimeException("Recruiter not found"));
         
-        job.setPostedBy(recruiter);
+        job.setUser(recruiter);
         return jobRepo.save(job);
     }
 
     // Requirement 9: View jobs posted by recruiter
     public List<Job> getJobsByRecruiter(String recruiterEmail) {
-        Recruiter recruiter = recruiterRepo.findByEmail(recruiterEmail)
+        User recruiter = userRepo.findByEmail(recruiterEmail)
                 .orElseThrow(() -> new RuntimeException("Recruiter not found"));
         
-        return jobRepo.findByPostedBy(recruiter);
+        return jobRepo.findByUser(recruiter);
     }
 
     // Requirement 10: View applicants for a specific job
@@ -72,7 +70,7 @@ public class JobService {
         Job job = getJobById(jobId);
 
         // Security Check: Ensure the recruiter requesting this OWNS the job
-        if (!job.getPostedBy().getEmail().equals(recruiterEmail)) {
+        if (!job.getUser().getEmail().equals(recruiterEmail)) {
             throw new RuntimeException("Unauthorized: You cannot view applications for a job you did not post.");
         }
 
@@ -85,11 +83,11 @@ public class JobService {
     @Transactional
     public void applyForJob(Long jobId, String candidateEmail) {
         Job job = getJobById(jobId);
-        User candidate = candidateRepo.findByEmail(candidateEmail)
+        User candidate = userRepo.findByEmail(candidateEmail)
                 .orElseThrow(() -> new BusinessException(ErrorCode.CANDIDATE_NOT_FOUND, "Candidate not found"));
 
         // Check if already applied
-        if (applicationRepo.existsByJobAndCandidate(job, candidate)) {
+        if (applicationRepo.existsByJobAndUser(job, candidate)) {
             throw new RuntimeException("You have already applied for this job.");
         }
 
