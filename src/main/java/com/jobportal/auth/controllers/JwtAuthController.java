@@ -65,6 +65,9 @@ public class JwtAuthController {
 	private final UserRepository userRepo;
 	private final TokenRepository tokenRepo;
 	private final AuthService authService;
+	
+	@Value("${spring.app.jwtSecret}")
+	private String secretKey;
 
 	// ================= RECRUITER CANDIDATE =================
 	@PostMapping("/register/candidate")
@@ -140,8 +143,6 @@ public class JwtAuthController {
 
 	}
 
-	@Value("${spring.app.jwtSecret}")
-	private String secretKey;
 
 	@GetMapping("/check-validity")
 	public boolean checkTokenValidity(HttpServletRequest request, HttpServletResponse response) {

@@ -13,45 +13,30 @@ import com.jobportal.common.exceptions.BusinessException;
 
 import lombok.RequiredArgsConstructor;
 
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final UserRepository userRepo;
+	private final UserRepository userRepo;
 
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+	@Override
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        User user = userRepo.findByEmail(email)
-                .orElseThrow(() ->
-                        new BusinessException(
-                                ErrorCode.USER_NOT_REGISTERED,
-                                "User is not registered"
-                        )
-                );
+		User user = userRepo.findByEmail(email)
+				.orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_REGISTERED, "User is not registered"));
 
-        if (!user.isActive()) {
-            throw new BusinessException(
-                    ErrorCode.USER_INACTIVE,
-                    "User account is inactive"
-            );
-        }
+		if (!user.isActive()) {
+			throw new BusinessException(ErrorCode.USER_INACTIVE, "User account is inactive");
+		}
 
-        return buildUserDetails(user);
-    }
+		return buildUserDetails(user);
+	}
 
-    private UserDetails buildUserDetails(User user) {
+	private UserDetails buildUserDetails(User user) {
 
-        return org.springframework.security.core.userdetails.User
-                .withUsername(user.getEmail())
-                .password(user.getPassword())
-                .authorities("ROLE_" + user.getRole().name())
-                .accountLocked(false)
-                .accountExpired(false)
-                .credentialsExpired(false)
-                .disabled(!user.isActive())
-                .build();
-    }
+		return org.springframework.security.core.userdetails.User.withUsername(user.getEmail())
+				.password(user.getPassword()).authorities("ROLE_" + user.getRole().name()).accountLocked(false)
+				.accountExpired(false).credentialsExpired(false).disabled(!user.isActive()).build();
+	}
 }

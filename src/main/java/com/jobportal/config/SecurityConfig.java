@@ -51,8 +51,8 @@ public class SecurityConfig {
                                 "swagger-resources/**", "/configuration/ui", "/configuration/security",
                                 "/swagger-ui/**", "/webjars/**", "/swagger-ui.html")
                         .permitAll() // Allow access to authentication and registration endpoints
-                        .requestMatchers("/admin/**").hasRole("ADMIN") // Protect admin endpoints
-                        .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN") // Protect user endpoints
+//                        .requestMatchers("/api/candidates/**").hasAuthority("CANDIDATE") // Protect admin endpoints
+//                        .requestMatchers("/api/recruiter/**").hasAnyRole("USER", "RECRUITER") // Protect user endpoints
                         .anyRequest().authenticated() // All other requests require authentication
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling

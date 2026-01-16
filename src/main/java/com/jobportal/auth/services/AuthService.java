@@ -29,139 +29,107 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class AuthService {
 
-        private final UserRepository userRepo;
-        private final PasswordEncoder passwordEncoder;
-        private final JwtTokenProvider jwtProvider;
-        private final TokenRepository tokenRepo;
-        private final AuthenticationManager authenticationManager;
+	private final UserRepository userRepo;
+	private final PasswordEncoder passwordEncoder;
+	private final JwtTokenProvider jwtProvider;
+	private final TokenRepository tokenRepo;
+	private final AuthenticationManager authenticationManager;
 
-        // ================= REGISTER CANDIDATE =================
-        public void registerCandidate(CandidateRegisterRequest req) {
+	// ================= REGISTER CANDIDATE =================
+	public void registerCandidate(CandidateRegisterRequest req) {
 
-                if (userRepo.existsByEmail(req.getEmail())) {
-                        throw new BusinessException(
-                                        ErrorCode.EMAIL_ALREADY_EXISTS,
-                                        "Email already registered");
-                }
+		if (userRepo.existsByEmail(req.getEmail())) {
+			throw new BusinessException(ErrorCode.EMAIL_ALREADY_EXISTS, "Email already registered");
+		}
 
-                User user = User.builder()
-                                .fullname(req.getName())
-                                .email(req.getEmail())
-                                .password(passwordEncoder.encode(req.getPassword()))
-                                .experience(req.getExperience())
-                                .skills(req.getSkills())
-                                .location(req.getLocation())
-                                .role(Role.CANDIDATE)
-                                .active(true)
-                                .createdAt(LocalDateTime.now())
-                                .build();
+		User user = User.builder().fullname(req.getName()).email(req.getEmail())
+				.password(passwordEncoder.encode(req.getPassword())).experience(req.getExperience())
+				.skills(req.getSkills()).location(req.getLocation()).role(Role.CANDIDATE).active(true)
+				.createdAt(LocalDateTime.now()).build();
 
-                userRepo.save(user);
-        }
+		userRepo.save(user);
+	}
 
-        // ================= REGISTER RECRUITER =================
-        public void registerRecruiter(RecruiterRegisterRequest req) {
+	// ================= REGISTER RECRUITER =================
+	public void registerRecruiter(RecruiterRegisterRequest req) {
 
-                if (userRepo.existsByEmail(req.getEmail())) {
-                        throw new BusinessException(
-                                        ErrorCode.EMAIL_ALREADY_EXISTS,
-                                        "Email already registered");
-                }
+		if (userRepo.existsByEmail(req.getEmail())) {
+			throw new BusinessException(ErrorCode.EMAIL_ALREADY_EXISTS, "Email already registered");
+		}
 
-                User user = User.builder()
-                                .fullname(req.getName())
-                                .company(req.getCompany())
-                                .email(req.getEmail())
-                                .password(passwordEncoder.encode(req.getPassword()))
-                                .role(Role.RECRUITER)
-                                .active(true)
-                                .createdAt(LocalDateTime.now())
-                                .build();
+		User user = User.builder().fullname(req.getName()).company(req.getCompany()).email(req.getEmail())
+				.password(passwordEncoder.encode(req.getPassword())).role(Role.RECRUITER).active(true)
+				.createdAt(LocalDateTime.now()).build();
 
-                userRepo.save(user);
-        }
+		userRepo.save(user);
+	}
 
-        // ================= LOGIN =================
-        public JwtResponse login(JwtRequest request) {
+	// ================= LOGIN =================
+	public JwtResponse login(JwtRequest request) {
 
-                try {
-                        authenticationManager.authenticate(
-                                        new UsernamePasswordAuthenticationToken(
-                                                        request.getEmail(),
-                                                        request.getPassword()));
-                } catch (Exception ex) {
-                        throw new BusinessException(
-                                        ErrorCode.INVALID_CREDENTIALS,
-                                        "Invalid email or password");
-                }
+		try {
+			authenticationManager
+					.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+		} catch (Exception ex) {
+			throw new BusinessException(ErrorCode.INVALID_CREDENTIALS, "Invalid email or password");
+		}
 
-                User user = userRepo.findByEmail(request.getEmail())
-                                .orElseThrow(() -> new BusinessException(
-                                                ErrorCode.USER_NOT_REGISTERED,
-                                                "User is not registered"));
+		User user = userRepo.findByEmail(request.getEmail())
+				.orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_REGISTERED, "User is not registered"));
 
-                String token = jwtProvider.generateToken(user);
+		String token = jwtProvider.generateToken(user);
 
-                revokeAllUserTokens(user);
-                saveUserToken(user, token);
+		revokeAllUserTokens(user);
+		saveUserToken(user, token);
 
-                return new JwtResponse(token);
-        }
+		return new JwtResponse(token);
+	}
 
-        // ================= TOKEN VALIDATION =================
-        public boolean isTokenValid(String authHeader) {
+	// ================= TOKEN VALIDATION =================
+	public boolean isTokenValid(String authHeader) {
 
-                if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                        return false;
-                }
+		if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+			return false;
+		}
 
-                String jwt = authHeader.substring(7);
+		String jwt = authHeader.substring(7);
 
-                if (!jwtProvider.validateToken(jwt)) {
-                        revokeToken(jwt);
-                        return false;
-                }
+		if (!jwtProvider.validateToken(jwt)) {
+			revokeToken(jwt);
+			return false;
+		}
 
-                return tokenRepo.findByToken(jwt)
-                                .filter(t -> !t.getExpired() && !t.getRevoked())
-                                .isPresent();
-        }
+		return tokenRepo.findByToken(jwt).filter(t -> !t.getExpired() && !t.getRevoked()).isPresent();
+	}
 
-        // ================= TOKEN HELPERS =================
-        private void saveUserToken(User user, String jwt) {
+	// ================= TOKEN HELPERS =================
+	private void saveUserToken(User user, String jwt) {
 
-                Token token = Token.builder()
-                                .token(jwt)
-                                .tokenType(TokenType.BEARER)
-                                .expired(false)
-                                .revoked(false)
-                                .user(user)
-                                .createdAt(LocalDateTime.now())
-                                .updatedAt(LocalDateTime.now())
-                                .build();
+		Token token = Token.builder().token(jwt).tokenType(TokenType.BEARER).expired(false).revoked(false).user(user)
+				.createdAt(LocalDateTime.now()).updatedAt(LocalDateTime.now()).build();
 
-                tokenRepo.save(token);
-        }
+		tokenRepo.save(token);
+	}
 
-        private void revokeAllUserTokens(User user) {
+	private void revokeAllUserTokens(User user) {
 
-                var tokens = tokenRepo.findAllValidTokensByUser(user.getId());
-                if (tokens.isEmpty())
-                        return;
+		var tokens = tokenRepo.findAllValidTokensByUser(user.getId());
+		if (tokens.isEmpty())
+			return;
 
-                tokens.forEach(t -> {
-                        t.setExpired(true);
-                        t.setRevoked(true);
-                });
+		tokens.forEach(t -> {
+			t.setExpired(true);
+			t.setRevoked(true);
+		});
 
-                tokenRepo.saveAll(tokens);
-        }
+		tokenRepo.saveAll(tokens);
+	}
 
-        private void revokeToken(String jwt) {
-                tokenRepo.findByToken(jwt).ifPresent(t -> {
-                        t.setExpired(true);
-                        t.setRevoked(true);
-                        tokenRepo.save(t);
-                });
-        }
+	private void revokeToken(String jwt) {
+		tokenRepo.findByToken(jwt).ifPresent(t -> {
+			t.setExpired(true);
+			t.setRevoked(true);
+			tokenRepo.save(t);
+		});
+	}
 }
