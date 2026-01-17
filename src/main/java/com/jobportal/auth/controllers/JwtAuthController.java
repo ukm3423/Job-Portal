@@ -1,15 +1,12 @@
 package com.jobportal.auth.controllers;
 
 import java.security.Key;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,15 +20,11 @@ import com.jobportal.auth.dto.JwtRequest;
 import com.jobportal.auth.dto.JwtResponse;
 import com.jobportal.auth.dto.RecruiterRegisterRequest;
 import com.jobportal.auth.models.Token;
-import com.jobportal.auth.models.TokenType;
-import com.jobportal.auth.models.User;
 import com.jobportal.auth.repository.TokenRepository;
 import com.jobportal.auth.repository.UserRepository;
 import com.jobportal.auth.security.JwtTokenProvider;
 import com.jobportal.auth.services.AuthService;
 import com.jobportal.auth.services.UserDetailsServiceImpl;
-import com.jobportal.common.dto.ErrorCode;
-import com.jobportal.common.exceptions.BusinessException;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -95,55 +88,6 @@ public class JwtAuthController {
 		return ResponseEntity.ok(authService.login(authenticationRequest));
 	}
 
-	/**
-	 * Authenticate the user by email & password { currently not using}
-	 * 
-	 * @param email
-	 * @param password
-	 * @throws Exception
-	 */
-	private void authenticate(String email, String password) throws Exception {
-		try {
-			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
-		} catch (Exception e) {
-			throw new Exception("INVALID_CREDENTIALS", e);
-		}
-	}
-
-	/**
-	 * Save the user's token in database
-	 * 
-	 * @param user
-	 * @param jwtToken
-	 */
-	private void saveUserToken(User user, String jwtToken) {
-
-		var token = Token.builder().token(jwtToken).tokenType(TokenType.BEARER).expired(false).revoked(false).user(user)
-				.createdAt(LocalDateTime.now()).updatedAt(LocalDateTime.now()).build();
-
-		tokenRepo.save(token);
-	}
-
-	/**
-	 * revoked all user's token (if token already available set isExpired = true)
-	 * 
-	 * @param user
-	 */
-	private void revokeAllUserTokens(User user) {
-		var validUserTokens = tokenRepo.findAllValidTokensByUser(user.getId());
-
-		if (validUserTokens.isEmpty())
-			return;
-
-		validUserTokens.forEach(token -> {
-			token.setExpired(true);
-			token.setRevoked(true);
-		});
-		tokenRepo.saveAll(validUserTokens);
-
-	}
-
-
 	@GetMapping("/check-validity")
 	public boolean checkTokenValidity(HttpServletRequest request, HttpServletResponse response) {
 
@@ -188,11 +132,6 @@ public class JwtAuthController {
 		}
 
 		return false; // Token is invalid or not found in the database
-	}
-
-	@GetMapping("/")
-	public String home() {
-		return "Application is running 🚀";
 	}
 
 }

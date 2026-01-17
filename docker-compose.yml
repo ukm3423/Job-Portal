@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: jobportal-postgres
+    environment:
+      POSTGRES_DB: jobportaldb
+      POSTGRES_USER: jobuser
+      POSTGRES_PASSWORD: jobpass
+    ports:
+      - "5433:5432"
+    volumes:
+      - jobportal_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U jobuser -d jobportaldb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    image: umeshkumarchamp/jobportal:1.2 
+    container_name: jobportal-app
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/jobportaldb
+      SPRING_DATASOURCE_USERNAME: jobuser
+      SPRING_DATASOURCE_PASSWORD: jobpass
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  jobportal_pg_data:
