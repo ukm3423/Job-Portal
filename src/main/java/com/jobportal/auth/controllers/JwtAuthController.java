@@ -6,8 +6,6 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,10 +19,7 @@ import com.jobportal.auth.dto.JwtResponse;
 import com.jobportal.auth.dto.RecruiterRegisterRequest;
 import com.jobportal.auth.models.Token;
 import com.jobportal.auth.repository.TokenRepository;
-import com.jobportal.auth.repository.UserRepository;
-import com.jobportal.auth.security.JwtTokenProvider;
 import com.jobportal.auth.services.AuthService;
-import com.jobportal.auth.services.UserDetailsServiceImpl;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -50,12 +45,6 @@ public class JwtAuthController {
 	 * * ===========================================================================
 	 * * | Code Status : On
 	 */
-
-	private final AuthenticationManager authenticationManager;
-	private final JwtTokenProvider jwtUtil;
-	private final UserDetailsServiceImpl userDetailsService;
-	private final PasswordEncoder passwordEncoder;
-	private final UserRepository userRepo;
 	private final TokenRepository tokenRepo;
 	private final AuthService authService;
 	

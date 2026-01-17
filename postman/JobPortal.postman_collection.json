@@ -1,0 +1,496 @@
+{
+	"info": {
+		"_postman_id": "73267ae5-062f-408f-99cf-fda6083d1135",
+		"name": "JobPortal",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38766250"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "/register/candidate",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Pratik Sharma\",\n    \"email\": \"pratik@gmail.com\",\n    \"password\": \"123456\",\n    \"experience\": 2,\n    \"skills\": \"Java,Spring Boot,SQL\",\n    \"location\": \"Delhi\"\n}"
+						},
+						"url": {
+							"raw": "{{local}}/api/auth/register/candidate",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"register",
+								"candidate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/register/recruiter",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Umesh Kumar\",\n  \"company\": \"SSPL\",\n  \"email\": \"umesh@gmail.com\",\n  \"password\": \"123456\"\n}\n"
+						},
+						"url": {
+							"raw": "{{local}}/api/auth/register/recruiter",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"register",
+								"recruiter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"rahul@gmail.com\",\n    \"password\":\"123456\"\n}\n"
+						},
+						"url": {
+							"raw": "{{local}}/api/auth/login",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/check-availablity",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1bWVzaEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9SRUNSVUlURVIiLCJuYW1lIjoiQW1hbiBWZXJtYSIsImlhdCI6MTc2ODYzMTA5OSwiZXhwIjoxNzY4NjM0Njk5fQ.uGC8qXsD7G25ayceqSgrpofoKxigtHcB1MyHhJbqT2ClysxxtLF62Hk9pwC8JEaeagCNgb2V2j9rWEc_wJtMnw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Rahul Sharma\",\n  \"experience\": 3,\n  \"skills\": \"Java, Spring Boot, Microservices\",\n  \"location\": \"Bangalore\"\n}\n"
+						},
+						"url": {
+							"raw": "{{local}}/api/auth/",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "candidate",
+			"item": [
+				{
+					"name": "/api/candidates/profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJyYWh1bEBleGFtcGxlLmNvbSIsInJvbGUiOiJST0xFX0NBTkRJREFURSIsIm5hbWUiOiJSYWh1bCBTaGFybWEiLCJpYXQiOjE3Njg2MDEyOTIsImV4cCI6MTc2ODYwNDg5Mn0.TVfoP4Ixm2CNy33fyUhA-r3RmfsXzgPsTSy4W1ahxDWOTzsj0-1UajPQiUI4QB4v5bCDur_w-0CCe-y7q_o_vA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/api/candidates/profile",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"candidates",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/candidates/profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJyYWh1bEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9DQU5ESURBVEUiLCJuYW1lIjoiUmFodWwgU2hhcm1hIiwiaWF0IjoxNzY4NjQ5NzMxLCJleHAiOjE3Njg2NTMzMzF9.95rPO7yz8NPJkJyZdER4ZmytQ8VucscEMoerdA5OE4Mdh4dJwNpAPCMDz3OYF2pE2wNkOq-itjk_k4XAVPNEBA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Rahul Sahu\",\n  \"experience\": 1,\n  \"skills\": \"Java, Spring Boot, Microservices\",\n  \"location\": \"Bangalore\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/api/candidates/profile",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"candidates",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/jobs/1/apply",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJyYWh1bEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9DQU5ESURBVEUiLCJuYW1lIjoiUmFodWwgU2hhcm1hIiwiaWF0IjoxNzY4NjM2MDgzLCJleHAiOjE3Njg2Mzk2ODN9.mL7oAfXa5AuEytkjaYEoCd0NV-tfSPhUGLZa_Gevu0FRnvgnLJIFdFaJ2g3xV8xuU2dgvy9E20W_SYO0v7pbOA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/api/jobs/1/apply",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"jobs",
+								"1",
+								"apply"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "recruiter",
+			"item": [
+				{
+					"name": "/api/jobs",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ2aXZla0BnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9SRUNSVUlURVIiLCJuYW1lIjoiVml2ZWsgVmVybWEiLCJpYXQiOjE3Njg2MzQyNTAsImV4cCI6MTc2ODYzNzg1MH0.Y7T1s5I1hIPO3GIM6I8ceUTduTXKSSkXfGBzoIjolXoCUPbR3jIQCaND-kyipva4r2BbXe3LLIlEmaPhOziahg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Python Backend Developer\",\n  \"description\": \"backend developer role\",\n  \"requiredSkills\": \"Python\",\n  \"experienceRequired\": 2,\n  \"location\": \"New Delhi\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/api/jobs",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"jobs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/applications/4",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJyYWh1bEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9DQU5ESURBVEUiLCJuYW1lIjoiUmFodWwgU2hhcm1hIiwiaWF0IjoxNzY4NjM0NDA2LCJleHAiOjE3Njg2MzgwMDZ9.fZKcaB57QncM3GuyO45yyKt-dceyYI-kh7sYG545dF60Oc7WsbRRR58zq3RgqGenQooDRW9_puyVCOdxXhpBOg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/api/jobs/applications/2",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"jobs",
+								"applications",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/jobs/3",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJyYWh1bEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9DQU5ESURBVEUiLCJuYW1lIjoiUmFodWwgU2hhcm1hIiwiaWF0IjoxNzY4NjM0NDA2LCJleHAiOjE3Njg2MzgwMDZ9.fZKcaB57QncM3GuyO45yyKt-dceyYI-kh7sYG545dF60Oc7WsbRRR58zq3RgqGenQooDRW9_puyVCOdxXhpBOg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/api/jobs/1",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"jobs",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/jobs/search",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJyYWh1bEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9DQU5ESURBVEUiLCJuYW1lIjoiUmFodWwgU2hhcm1hIiwiaWF0IjoxNzY4NjM0NDA2LCJleHAiOjE3Njg2MzgwMDZ9.fZKcaB57QncM3GuyO45yyKt-dceyYI-kh7sYG545dF60Oc7WsbRRR58zq3RgqGenQooDRW9_puyVCOdxXhpBOg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/api/jobs/search?skill=Java&location=Kolkata",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"jobs",
+								"search"
+							],
+							"query": [
+								{
+									"key": "skill",
+									"value": "Java"
+								},
+								{
+									"key": "location",
+									"value": "Kolkata"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/jobs/mine",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ2aXZla0BnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9SRUNSVUlURVIiLCJuYW1lIjoiVml2ZWsgVmVybWEiLCJpYXQiOjE3Njg2MzQyNTAsImV4cCI6MTc2ODYzNzg1MH0.Y7T1s5I1hIPO3GIM6I8ceUTduTXKSSkXfGBzoIjolXoCUPbR3jIQCaND-kyipva4r2BbXe3LLIlEmaPhOziahg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/api/jobs/mine",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"jobs",
+								"mine"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/jobs",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1bWVzaEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9SRUNSVUlURVIiLCJuYW1lIjoiQW1hbiBWZXJtYSIsImlhdCI6MTc2ODYzMzk5NSwiZXhwIjoxNzY4NjM3NTk1fQ.gBkghLhUsP3Xx654MiAFrZ2-k8W-oJRwFWUciESZOC25SrlG-4AefNYraG_oYNALtoio7XHFy4o6kOPrtbaRaQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/api/jobs",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"api",
+								"jobs"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
