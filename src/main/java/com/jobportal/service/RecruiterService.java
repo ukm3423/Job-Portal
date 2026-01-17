@@ -16,7 +16,6 @@ import com.jobportal.mapper.JobApplicationMapper;
 import com.jobportal.mapper.JobMapper;
 import com.jobportal.model.Job;
 import com.jobportal.model.JobApplication;
-import com.jobportal.model.Recruiter;
 import com.jobportal.repository.JobApplicationRepository;
 import com.jobportal.repository.JobRepository;
 

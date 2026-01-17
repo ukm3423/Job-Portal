@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import com.jobportal.auth.models.User;
 import com.jobportal.model.Job;
-import com.jobportal.model.Recruiter;
 @Repository
 public interface JobRepository extends JpaRepository<Job, Long> {
     // For: GET /api/jobs/search?skill=Java&location=Kolkata
